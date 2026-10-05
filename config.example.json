@@ -1,0 +1,183 @@
+{
+  "_说明": "运行参数。研究方向关键词请改 profile.md，期刊覆盖请改 journals.csv。本文件只管开关和路径。",
+  "researcher": {
+    "_说明": "收件邮箱用于每周邮件推送；mailto 给 OpenAlex / Unpaywall 报身份，必须是真实域名。",
+    "name": "<YOUR NAME>",
+    "email": "user@example.com",
+    "mailto": "user@example.com"
+  },
+  "lookback_days": 7,
+  "max_papers_per_run": 900,
+  "pubmed": {
+    "_说明": "NCBI API key：有则从 3 次/秒 提到 10 次/秒。个人免费申请。",
+    "api_key": "",
+    "_max_per_group说明": "每组检索词最多从 PubMed 拉多少条（原来写死 200，实测 43 组里有 17 组窗口内命中超过 200，最多一组 2404 条，等于每次都静默丢掉一大半）。调大=召回更全、抓取更慢；0=不限（会很慢，慎用）。",
+    "max_per_group": 400
+  },
+  "sources": {
+    "_说明": "false 就关掉该数据源。预印本噪音大，觉得吵就关。",
+    "pubmed": true,
+    "openalex": true,
+    "biorxiv": true,
+    "medrxiv": true,
+    "arxiv": true,
+    "rss": true,
+    "watch_authors": true
+  },
+  "rss_feeds": [
+    {
+      "name": "<YOUR NAME>",
+      "url": "https://www.nature.com/nature.rss"
+    },
+    {
+      "name": "<YOUR NAME>",
+      "url": "https://www.nature.com/nm.rss"
+    },
+    {
+      "name": "<YOUR NAME>",
+      "url": "https://www.nature.com/natmetab.rss"
+    },
+    {
+      "name": "<YOUR NAME>",
+      "url": "https://www.nature.com/npjdigitalmed.rss"
+    },
+    {
+      "name": "<YOUR NAME>",
+      "url": "https://www.jmir.org/feed/rss"
+    }
+  ],
+  "paths": {
+    "_说明": "papers_dir 是糖尿病文献落盘根目录（周文件夹建在它下面），留空则只在 reports/ 出报告不下载。挪动目录后改这里即可，pdf_path 会自动重链（见 download.py fixpaths）。",
+    "papers_dir": "",
+    "weekly_subdir": true
+  },
+  "report": {
+    "_说明": "周报条目延续：抓取是增量的，上一批抓到的顶刊下一批未必再撞见，容易「上周还在、这周没了」。开启后，档位在 carryover_folders 内、发表日期在 carryover_days 窗口内的旧条目会继续展示，卡片带「延续」徽章，筛选栏可只看本周新增。",
+    "carryover": false,
+    "carryover_days": 14,
+    "carryover_folders": [
+      "0",
+      "1",
+      "2"
+    ],
+    "_snapshot说明": "「上一版沿用」兜底：每出一版报告就把这一版的条目集合存进 report_snapshot 表，下一版报告把它并进来，并打「沿用」徽章。这样反复重跑只做加法——上一版你看过的条目不会因为换了个批次号就消失（除非你已经把它从库里删掉）。false=关闭。",
+    "snapshot": false,
+    "_rerun_window_days说明": "跨周时的沿用判定窗口（天）。同一周标签内无条件沿用；跨周时，只有距上一版报告不超过这么多天才沿用（判定为「同一轮的补跑」）。正常每周跑一次间隔 7 天 → 不会被误判成补跑而把上周整包拖进来。",
+    "rerun_window_days": 4
+  },
+  "download": {
+    "_说明": "自动下载只能拿到开放获取（OA）全文；出版社付费墙需要机构登录态，见 ezproxy_prefix / cookies_file。cookies 会过期（jaccount 是会话级），过期后付费墙文献自动进「待下载清单」让你手动下。",
+    "enabled": true,
+    "only_tiers": [
+      "S+",
+      "S",
+      "A",
+      "B"
+    ],
+    "min_score": 0,
+    "download_folders": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "library_folders": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "q1_top_if": 7,
+    "max_per_week": 0,
+    "timeout": 25,
+    "_说明_email": "Unpaywall 要求一个真实邮箱域名（填 user@example.com 会被 422 拒绝）。换成你自己的邮箱更稳妥。",
+    "unpaywall_email": "user@example.com",
+    "ezproxy_prefix": "",
+    "cookies_file": "",
+    "_max_per_week说明": "0 = 不限量；二区(Q2)及以上能下多少下多少",
+    "on_campus": true,
+    "paywall_delay": 1.5,
+    "_机构通道说明": "交大校外访问走的是 VPN(<YOUR_VPN_HOST>)，不是 EZproxy。连上 VPN 后把 on_campus 设为 true，付费墙才去撞出版社（此时本机是校内 IP，出版社直接放行）；ezproxy_prefix 只有确认学校给了代理前缀才填。paywall_delay=每次撞出版社的间隔秒数，防风控。"
+  },
+  "mail": {
+    "_说明": "每周把周报发到邮箱。password 填【授权码】不是登录密码。QQ 邮箱：设置→账号→开启 IMAP/SMTP 后拿到 16 位授权码。",
+    "enabled": true,
+    "smtp_host": "smtp.qq.com",
+    "smtp_port": 465,
+    "use_ssl": true,
+    "username": "user@example.com",
+    "password": "",
+    "from_name": "文献监控 lit-monitor",
+    "to": [
+      "user@example.com"
+    ],
+    "subject_prefix": "[文献周报]"
+  },
+  "llm": {
+    "_说明": "可选。OpenAI 兼容接口即可自动做中文标题翻译+综述成文。硅基流动(SiliconFlow)已验证可用：base_url 固定填 https://api.siliconflow.cn/v1；model 填模型广场里带组织前缀的完整 ID（如 deepseek-ai/DeepSeek-V3 / Qwen/Qwen3-235B-A22B / Pro/deepseek-ai/DeepSeek-V3）；api_key 填『API密钥』页新建的 sk- 开头密钥。不填则纯规则运行，完全可用。",
+    "enabled": true,
+    "base_url": "https://api.siliconflow.cn/v1",
+    "api_key": "",
+    "model": "deepseek-ai/DeepSeek-V4-Flash",
+    "_max_translate说明": "出报告时一轮最多多少篇进入 AI 处理（按相关度 score 从高到低取）。0=不限，此时总量由 translate_folders 控制。翻译结果回写数据库，下周只翻新条目。",
+    "max_translate": 0,
+    "_translate_folders说明": "只对哪些档位做 AI 处理（中文评语+中文翻译）。档位：0=导师组 1=世界顶刊(S+) 2=领域顶刊(S) 3=一区top 4=一区 5=二区 6=其他。默认 [\"0\",\"1\",\"2\",\"3\"] = 一区top 及以上再翻，以下的不翻（不浪费 token，反正看不完）。放空列表 []=全翻。",
+    "translate_folders": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "max_items": 24,
+    "temperature": 0.2
+  },
+  "query_expansion": {
+    "_说明": "检索前『大模型扩词』(RAG 式召回增强)：每轮抓取前让 LLM 基于画像补充 PubMed/OpenAlex 检索词并入检索式；命中的文献若无糖尿病核心词也先保留，交给 screen.py 的 LLM 判相关，相关才进库/下载。结果缓存 30 天（refresh 设为 true 可强制重算）。",
+    "enabled": true,
+    "max_terms": 30,
+    "ttl_days": 30,
+    "survive_without_core": true,
+    "refresh": false
+  },
+  "output": {
+    "dir": "reports",
+    "html": true,
+    "markdown": true,
+    "excel": false
+  },
+  "exclude_terms": [],
+  "proxy_requires_core": true,
+  "ai_board": {
+    "_说明": "独立「医学AI/通用AI」文献板块：arXiv 预印本 + PubMed 顶刊(已发表) 双源，按 大模型智能体/医学AI/通用AI 三分，带「顶会/顶刊线索」徽章，下载 PDF 到 papers_dir/1AI文献/<周>/，并随周报一起发邮件。关掉 enabled 即不参与。",
+    "enabled": true,
+    "_root说明": "AI 板块落盘根目录。这里写死 0博士文献（而不是跟 papers_dir 走），这样糖尿病文献挪进子目录后，AI 板块仍在 0博士文献/1AI文献，不受影响。",
+    "root": "",
+    "lookback_days": 7,
+    "folder": "1AI文献",
+    "download": true,
+    "max_per_run": 150,
+    "conf_lookback_days": 120,
+    "conf_cap": 200,
+    "journal_lookback_days": 14,
+    "download_cats": [
+      "A0",
+      "A1"
+    ],
+    "max_download": 15,
+    "sources": {
+      "arxiv": true,
+      "pubmed_medical_ai": true
+    },
+    "query_expansion": {
+      "_说明": "AI 板块的『大模型扩词』(RAG 召回增强) + 检索闭环：抓取前让 LLM 基于 AI 核心方向/关键词补充 arXiv/PubMed 检索词；每周再用本周实际入库的 AI 文献反推下周该补搜的词（反馈环）。用独立缓存 data/llm_queries_ai.json，与糖尿病互不干扰。enabled 关掉即不扩词。",
+      "enabled": true,
+      "max_terms": 30,
+      "ttl_days": 30,
+      "refresh": false
+    }
+  }
+}

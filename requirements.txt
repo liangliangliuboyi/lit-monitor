@@ -1,0 +1,6 @@
+# lit-monitor 运行时零第三方依赖：仅使用 Python 标准库。
+# 要求 Python >= 3.8（使用了 f-string / dataclasses / typing 等现代特性）。
+#
+# 可选（仅用于论文附带的基线实验，不属于主程序）：
+#   numpy>=1.24
+#   scikit-learn>=1.3
