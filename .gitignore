@@ -1,0 +1,24 @@
+# ---- 私有数据与凭据（绝不提交）----
+config.json
+cookies*.txt
+cookies*.json
+
+# ---- 运行数据 ----
+data/
+reports/
+*.db
+*.db.bak-*
+*.log
+__pycache__/
+*.pyc
+
+# ---- 内部文档与论文素材 ----
+HANDOFF.md
+状态存档.md
+论文材料/
+论文*.md
+_*.txt
+
+# ---- 系统 ----
+.DS_Store
+Thumbs.db
